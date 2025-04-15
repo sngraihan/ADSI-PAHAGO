@@ -3,24 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>PahaGo</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
 </head>
 <body>
     <!-- navbar -->
     <header class="navbar">
-        <a href="index.html">PahaGo</a>
-        <div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Beranda</a></li>
-                    <li><a href="packages.html"></a>Paket Wisata</li>
-                    <li><a href="status.html">Status Perjalanan</a></li>
-                    <li><a href="login.html">login</a></li>
-                    <li><a href="register.html">Daftar</a></li>
-                </ul>
-            </nav>
-            <button></button>
+        <div class="container">
+            <div class="navbar-content">
+                <a href="index.html" class="logo">PahaGo</a>
+                <nav class="nav-menu">
+                    <ul>
+                        <li><a href="index.html" class="active">Beranda</a></li>
+                        <li><a href="packages.html">Paket Wisata</a></li>
+                        <li><a href="status.html">Status Perjalanan</a></li>
+                        <li><a href="login.html">login</a></li>
+                        <li><a href="register.html" class="btn-primary">Daftar</a></li>
+                    </ul>
+                </nav>
+                <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+            </div>
         </div>
     </header>
 
@@ -178,5 +183,50 @@
 
     
     <!-- footer -->
+    <footer>
+        <div>
+            <div>
+                <div>
+                    <h3>Tentang Pahago</h3>
+                    <p>Platform pemesanan paket wisata terpercaya 
+                        untuk menjelajahi keindahan Pahawang dan 
+                        sekitarnya.
+                    </p>
+                </div>
+
+                <div>
+                    <h3>Navigasi Cepat</h3>
+                    <ul>
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="packages.html">Paket Wisata</a></li>
+                        <li><a href="status.html">Status Perjalanan</a></li>
+                        <li><a href="login.html">Masuk</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Hubungi Kami</h3>
+                    <ul>
+                        <li><i></i>+62 812 3456 7890</li>
+                        <li><i></i>info@pahago.com</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Media Sosial</h3>
+                    <div>
+                        <a href=""><i>facebook</i></a>
+                        <a href=""><i>instagram</i></a>
+                        <a href=""><i>whatsapp</i></a>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <p>&copy; 2025 Pahago. Seluruh hak cipta dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

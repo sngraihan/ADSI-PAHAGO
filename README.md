@@ -1,0 +1,1 @@
+PahaGo merupakan platform digital berbasis web yang memungkinkan wisatawan untuk menemukan, memilih, dan memesan paket wisata ke Pulau Pahawang secara online. Sistem ini dikembangkan untuk meningkatkan efisiensi dalam perencanaan perjalanan wisata, mengurangi kendala dalam proses pemesanan, serta memberikan pengalaman yang lebih nyaman bagi wisatawan.

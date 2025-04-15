@@ -67,7 +67,7 @@ a{
     
 }
 
-.btn.primary{
+.btn-primary{
     display: inline-block;
     background-color: var(--primary-color);
     color: var(--white);
@@ -79,7 +79,7 @@ a{
     transition: var(--transition);
 }
 
-.btn.primary:hover{
+.btn-primary:hover{
     background-color: var(--primary-hover);
 }
 
@@ -92,3 +92,42 @@ a{
     color: var(--text-color);
 }
 
+.hero {
+    height: 500px;
+    background-image: url("/img/hero.png");
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+  }
+  
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    padding: 0 20px;
+    margin-left: 10%;
+    }
+
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}

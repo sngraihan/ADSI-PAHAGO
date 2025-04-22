@@ -5,6 +5,11 @@
     --white: #ffffff;
     --transition: all 0.3s ease;
     --primary-hover: #0052e0;
+    --border-color: #e0e0e0;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --text-light: #666;
+    --radius: 8px;
+
 }
 
 *{
@@ -70,7 +75,12 @@ a{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 70px;
+    height: 60px;
+}
+
+.nav-menu{
+  margin-left: auto;
+  padding-right: 30px;
 }
 
 .nav-menu ul{
@@ -100,7 +110,7 @@ a{
     font-size: 1.5rem;
     font-weight: 700;
     color:var(--primary-color);
-    
+    margin-right: auto;
 }
 
 .menu-toggle{
@@ -345,4 +355,86 @@ a{
   padding-top: 2rem;
   border-top: 1px solid #333;
   color: #777;
+}
+
+/*auth*/
+.auth-section {
+  padding: 4rem 0;
+  min-height: calc(100vh - 70px - 400px); /* Subtract header and footer heights */
+  display: flex;
+  align-items: center;
+}
+
+.auth-card {
+  background-color: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.auth-card h2 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.password-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.forgot-password {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+}
+
+.form-group label {
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 10px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+.form-group input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(30, 106, 255, 0.2);
+}
+
+.auth-footer {
+
+text-align: center;
+margin-top: 1.5rem;
+color: var(--text-light);
+}
+
+.auth-footer a {
+color: var(--primary-color);
+font-weight: 500;
 }

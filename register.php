@@ -1,56 +1,60 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = ""; // password default Laragon kosong
-$db = "pahago";
+session_start();
 
-// Koneksi ke database
-$conn = new mysqli($host, $user, $pass, $db);
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $name     = $_POST['fullName'] ?? '';
+    $email    = $_POST['email'] ?? '';
+    $phone    = $_POST['phone'] ?? '';
+    $password = $_POST['password'] ?? '';
 
-// Cek koneksi
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
-}
+    if (!$name || !$email || !$phone || !$password) {
+        echo "Semua field harus diisi.";
+        exit;
+    }
 
-// Ambil data dari form
-$fullName = $_POST["fullName"];
-$email = $_POST["email"];
-$phone = $_POST["phone"];
-$password = $_POST["password"];
-$confirmPassword = $_POST["confirmPassword"];
+    // Hash password
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-if ($password !== $confirmPassword) {
-    echo "<script>alert('Konfirmasi password tidak cocok!'); window.location.href = 'register.html';</script>";
-    exit();
-}
+    // Koneksi ke DB
+    $conn = new mysqli("localhost", "root", "", "pahago");
 
-$checkQuery = "SELECT * FROM users WHERE email = ?";
-$checkStmt = $conn->prepare($checkQuery);
-$checkStmt->bind_param("s", $email);
-$checkStmt->execute();
-$result = $checkStmt->get_result();
+    if ($conn->connect_error) {
+        echo "Koneksi database gagal: " . $conn->connect_error;
+        exit;
+    }
 
-if ($result->num_rows > 0) {
-    echo "Email sudah terdaftar. Silakan gunakan email lain.";
-    exit;
-}
+    // Cek apakah email sudah ada
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    
+    if ($stmt->num_rows > 0) {
+        echo "Email sudah terdaftar.";
+        $stmt->close();
+        $conn->close();
+        exit;
+    }
+    $stmt->close();
 
+    // Simpan data baru
+    $stmt = $conn->prepare("INSERT INTO users (full_name, email, phone, password) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $name, $email, $phone, $hashedPassword);
 
-// Hash password untuk keamanan
-$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    if ($stmt->execute()) {
+        // Set session untuk menandai bahwa pengguna sudah login
+        $_SESSION['user_id'] = $stmt->insert_id; // Menggunakan ID dari pengguna yang baru terdaftar
+        $_SESSION['user_name'] = $name;
+        $_SESSION['logged_in'] = true;
 
-// Simpan ke database
-$sql = "INSERT INTO users (full_name, email, phone, password) VALUES (?, ?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("ssss", $fullName, $email, $phone, $hashedPassword);
+        echo "success";
+    } else {
+        echo "Gagal mendaftarkan pengguna.";
+    }
 
-if ($stmt->execute()) {
-    header("Location: index.html");
-    exit();
+    $stmt->close();
+    $conn->close();
 } else {
-    echo "<script>alert('Gagal mendaftar: Email sudah digunakan atau error lainnya'); window.location.href = 'register.html';</script>";
+    echo "Metode tidak diizinkan.";
 }
-
-$stmt->close();
-$conn->close();
 ?>

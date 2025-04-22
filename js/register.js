@@ -10,7 +10,7 @@ document.getElementById("submitBtn").addEventListener("click", function () {
             icon: 'warning',
             title: 'Form tidak lengkap',
             text: 'Semua field wajib diisi!',
-        });
+        });x    
         return;
     }
 
@@ -38,7 +38,7 @@ document.getElementById("submitBtn").addEventListener("click", function () {
                 timer: 2000,
                 showConfirmButton: false
             }).then(() => {
-                window.location.href = "index.html";
+                window.location.href = "index.php";
             });
         } else {
             Swal.fire({

@@ -1,100 +1,266 @@
 <?php
-require_once 'config.php';
+session_start();
 
-// Get featured packages
-$sql = "SELECT * FROM packages ORDER BY rating DESC LIMIT 6";
-$result = $conn->query($sql);
-$featuredPackages = [];
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $featuredPackages[] = $row;
-    }
-}
-
-include 'includes/header.php';
+// Tentukan variabel untuk status login
+$isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
 ?>
+<!DOCTYPE html>
+<html lang="en">
 
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-7 hero-content">
-                <h1 class="display-4 fw-bold mb-3">Temukan Surga di Pulau Pahawang</h1>
-                <p class="lead mb-4">Nikmati keindahan air laut sebening kristal, pantai yang masih alami, dan petualangan tak terlupakan.</p>
-                <a href="packages.php" class="btn btn-primary btn-lg rounded-pill">
-                    Jelajahi Sekarang <i class="fas fa-arrow-right ms-2"></i>
-                </a>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PahaGo</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body>
+    <!-- navbar -->
+    <header class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="index.php" class="logo">PahaGo</a>
+                <nav class="nav-menu">
+                    <ul>
+                        <li><a href="index.php" class="active">Beranda</a></li>
+                        <li><a href="packages.php">Paket Wisata</a></li>
+                        <li><a href="status.php">Status Perjalanan</a></li>
+                        <?php if ($isLoggedIn): ?>
+                            <li class="profile-dropdown">
+                                <div class="profile-trigger">
+                                    <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['user_name']); ?>&background=1e6aff&color=fff&size=32"
+                                        class="profile-image" alt="Profile">
+                                </div>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-header">
+                                        <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['user_name']); ?>&background=1e6aff&color=fff&size=64"
+                                            class="dropdown-profile-image" alt="Profile">
+                                        <div class="dropdown-profile-info">
+                                            <span class="dropdown-profile-name"><?php echo $_SESSION['user_name']; ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="#" class="dropdown-item" id="logoutLink">
+                                        <i class="fas fa-sign-out-alt"></i> Logout
+                                    </a>
+                                </div>
+                            </li>
+                        <?php else: ?>
+                            <li><a href="login.html">Masuk</a></li>
+                            <li><a href="register.html" class="btn-primary">Daftar</a></li>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
+                <button class="menu-toggle"><i class="fas fa-bars"></i></button>
             </div>
         </div>
-    </div>
-</section>
+    </header>
 
-<!-- Why Choose Us Section -->
-<section class="py-5 bg-white">
-    <div class="container py-4">
-        <h2 class="text-center fw-bold mb-5">Mengapa Memilih Pahago?</h2>
+    <!-- hero -->
+    <section class="hero" style="background-image: url('img/hero.png');">
+        <div class="hero-content">
+            <h1>Temukan Surga di Pulau Pahawang</h1>
+            <p>
+                Nikmati keindahan air laut sebening kristal, pantai yang masih alami,
+                dan petualangan tak terlupakan.
+            </p>
+            <a href="packages.php" class="btn-primary">Jelajahi Sekarang →</a>
+        </div>
+    </section>
 
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-3 text-center">
-                <div class="feature-icon">
-                    <i class="fas fa-star text-primary"></i>
+    <!-- content1 -->
+    <section class="content1">
+        <div class="container">
+            <h2 class="section-title">Mengapa Memilih Pahago?</h2>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Destinasi Eksklusif</h3>
+                    <p>Menawarkan pengalaman wisata terbaik</p>
                 </div>
-                <h3 class="h5 fw-semibold mb-2">Destinasi Eksklusif</h3>
-                <p class="text-muted">Menawarkan pengalaman wisata terbaik</p>
-            </div>
-
-            <div class="col-md-6 col-lg-3 text-center">
-                <div class="feature-icon">
-                    <i class="fas fa-car text-primary"></i>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Transportasi & Akomodasi</h3>
+                    <p>Semua sudah termasuk dalam paket</p>
                 </div>
-                <h3 class="h5 fw-semibold mb-2">Transportasi & Akomodasi</h3>
-                <p class="text-muted">Semua sudah termasuk dalam paket</p>
-            </div>
-
-            <div class="col-md-6 col-lg-3 text-center">
-                <div class="feature-icon">
-                    <i class="fas fa-check-circle text-primary"></i>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Pembayaran Aman</h3>
+                    <p>Transaksi mudah & terpercaya</p>
                 </div>
-                <h3 class="h5 fw-semibold mb-2">Pembayaran Aman</h3>
-                <p class="text-muted">Transaksi mudah & terpercaya</p>
-            </div>
-
-            <div class="col-md-6 col-lg-3 text-center">
-                <div class="feature-icon">
-                    <i class="fas fa-users text-primary"></i>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Pemandu Berpengalaman</h3>
+                    <p>Liburan tanpa khawatir</p>
                 </div>
-                <h3 class="h5 fw-semibold mb-2">Pemandu Berpengalaman</h3>
-                <p class="text-muted">Liburan tanpa khawatir</p>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Recommended Packages Section -->
-<section class="py-5 bg-light">
-    <div class="container py-4">
-        <h2 class="text-center fw-bold mb-5">Rekomendasi Paket Wisata</h2>
-
-        <div class="row g-4">
-            <?php foreach ($featuredPackages as $package): ?>
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <img src="<?php echo htmlspecialchars($package['image']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($package['title']); ?>">
-                    <div class="card-body">
-                        <h3 class="card-title h5 fw-bold"><?php echo htmlspecialchars($package['title']); ?></h3>
-                        <p class="card-text text-muted mb-3"><?php echo htmlspecialchars($package['duration']); ?></p>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="text-primary small">Mulai dari</span>
-                            <span class="fw-bold">Rp<?php echo number_format($package['price'], 0, ',', '.'); ?></span>
+    <!-- content2 -->
+    <section class="packages">
+        <div class="container">
+            <h2 class="section-title">Rekomendasi Paket Wisata</h2>
+            <div class="package-grid">
+                <!-- Package 1 -->
+                <div class="package-card">
+                    <div class="package-image">
+                        <img src="img/snorkeling.png" alt="Snorkeling Pahawang" />
+                    </div>
+                    <div class="package-content">
+                        <h3>Paket Snorkeling Pahawang</h3>
+                        <p class="duration">3 Hari 2 Malam</p>
+                        <div class="price-section">
+                            <span class="price-label">Mulai dari</span>
+                            <span class="price">Rp1.500.000</span>
                         </div>
-                        <a href="book.php?id=<?php echo $package['id']; ?>" class="btn btn-primary w-100">Pesan Sekarang</a>
+                        <button class="btn-primary full-width">Pesan Sekarang</button>
+                    </div>
+                </div>
+
+                <!-- Package 2 -->
+                <div class="package-card">
+                    <div class="package-image">
+                        <img src="img/camping.png" alt="Camping Pahawang" />
+                    </div>
+                    <div class="package-content">
+                        <h3>Paket Camping Pahawang</h3>
+                        <p class="duration">2 Hari 1 Malam</p>
+                        <div class="price-section">
+                            <span class="price-label">Mulai dari</span>
+                            <span class="price">Rp950.000</span>
+                        </div>
+                        <button class="btn-primary full-width">Pesan Sekarang</button>
+                    </div>
+                </div>
+
+                <!-- Package 3 -->
+                <div class="package-card">
+                    <div class="package-image">
+                        <img src="img/luxury.png" alt="Luxury Pahawang" />
+                    </div>
+                    <div class="package-content">
+                        <h3>Paket Luxury Pahawang</h3>
+                        <p class="duration">4 Hari 3 Malam</p>
+                        <div class="price-section">
+                            <span class="price-label">Mulai dari</span>
+                            <span class="price">Rp2.500.000</span>
+                        </div>
+                        <button class="btn-primary full-width">Pesan Sekarang</button>
+                    </div>
+                </div>
+
+                <!-- Package 4 -->
+                <div class="package-card">
+                    <div class="package-image">
+                        <img src="img/snorkeling.png" alt="Snorkeling Pahawang" />
+                    </div>
+                    <div class="package-content">
+                        <h3>Paket Snorkeling Pahawang</h3>
+                        <p class="duration">3 Hari 2 Malam</p>
+                        <div class="price-section">
+                            <span class="price-label">Mulai dari</span>
+                            <span class="price">Rp1.500.000</span>
+                        </div>
+                        <button class="btn-primary full-width">Pesan Sekarang</button>
+                    </div>
+                </div>
+
+                <!-- Package 5 -->
+                <div class="package-card">
+                    <div class="package-image">
+                        <img src="img/camping.png" alt="Camping Pahawang" />
+                    </div>
+                    <div class="package-content">
+                        <h3>Paket Camping Pahawang</h3>
+                        <p class="duration">2 Hari 1 Malam</p>
+                        <div class="price-section">
+                            <span class="price-label">Mulai dari</span>
+                            <span class="price">Rp950.000</span>
+                        </div>
+                        <button class="btn-primary full-width">Pesan Sekarang</button>
+                    </div>
+                </div>
+
+                <!-- Package 6 -->
+                <div class="package-card">
+                    <div class="package-image">
+                        <img src="img/luxury.png" alt="Luxury Pahawang" />
+                    </div>
+                    <div class="package-content">
+                        <h3>Paket Luxury Pahawang</h3>
+                        <p class="duration">4 Hari 3 Malam</p>
+                        <div class="price-section">
+                            <span class="price-label">Mulai dari</span>
+                            <span class="price">Rp2.500.000</span>
+                        </div>
+                        <button class="btn-primary full-width">Pesan Sekarang</button>
                     </div>
                 </div>
             </div>
-            <?php endforeach; ?>
         </div>
-    </div>
-</section>
+    </section>
 
-<?php include 'includes/footer.php'; ?>
+    <!-- footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Tentang Pahago</h3>
+                    <p>
+                        Platform pemesanan paket wisata terpercaya untuk menjelajahi
+                        keindahan Pahawang dan sekitarnya.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Navigasi Cepat</h3>
+                    <ul>
+                        <li><a href="index.php">Beranda</a></li>
+                        <li><a href="packages.php">Paket Wisata</a></li>
+                        <li><a href="status.php">Status Perjalanan</a></li>
+                        <?php if (!$isLoggedIn): ?>
+                            <li><a href="login.html">Masuk</a></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Hubungi Kami</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-phone"></i>+62 812 3456 7890</li>
+                        <li><i class="fas fa-envelope"></i>info@pahago.com</li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Media Sosial</h3>
+                    <div class="social-icons">
+                        <a href=""><i class="fab fa-facebook"></i></a>
+                        <a href=""><i class="fab fa-instagram"></i></a>
+                        <a href=""><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Pahago. Seluruh hak cipta dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

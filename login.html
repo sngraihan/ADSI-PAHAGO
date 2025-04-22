@@ -13,10 +13,10 @@
     <header class="navbar">
         <div class="container">
             <div class="navbar-content">
-                <a href="index.html" class="logo">PahaGo</a>
+                <a href="index.php" class="logo">PahaGo</a>
                 <nav class="nav-menu">
                     <ul>
-                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="index.php">Beranda</a></li>
                         <li><a href="packages.html">Paket Wisata</a></li>
                         <li><a href="status.html">Status Perjalanan</a></li>
                         <li><a href="login.html" class="active">Masuk</a></li>
@@ -40,7 +40,7 @@
                 <form id="loginForm" class="auth-form">
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="nama@email.com" required>
+                        <input type="email" id="email" name="email" placeholder="nama@email.com" required>
                     </div>
                     
                     <div class="form-group">
@@ -48,10 +48,10 @@
                             <label for="password">Password</label>
                             <a href="#" class="forgot-password">Lupa password?</a>
                         </div>
-                        <input type="password" id="password" required>
+                        <input type="password" id="password" name="password" required>
                     </div>
                     
-                    <button type="submit" class="btn-primary full-width">Masuk</button>
+                    <button type="button" class="btn-primary full-width" id="loginBtn">Masuk</button>
                 </form>
                 
                 <div class="auth-footer">
@@ -73,7 +73,7 @@
                 <div class="footer-section">
                     <h3>Navigasi Cepat</h3>
                     <ul>
-                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="index.php">Beranda</a></li>
                         <li><a href="packages.html">Paket Wisata</a></li>
                         <li><a href="status.html">Status Perjalanan</a></li>
                         <li><a href="login.html">Masuk</a></li>
@@ -104,6 +104,6 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/login.js"></script></body>
 </html>

@@ -73,10 +73,20 @@ $stmt->close();
             
             <!-- User Profile -->
             <div class="user-profile">
-                <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($guide_name); ?>&background=1e6aff&color=fff" alt="Profile" class="profile-image">
-                <div class="profile-info">
-                    <div class="profile-name"><?php echo htmlspecialchars($guide_name); ?></div>
-                    <div class="profile-role">Pemandu Wisata</div>
+                <div class="profile-wrapper" id="profileWrapper">
+                    <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($guide_name); ?>&background=1e6aff&color=fff" alt="Profile" class="profile-image">
+                    <div class="profile-info">
+                        <div class="profile-name"><?php echo htmlspecialchars($guide_name); ?></div>
+                        <div class="profile-role">Pemandu Wisata</div>
+                    </div>
+                    <i class="fas fa-chevron-down profile-arrow"></i>
+                </div>
+                
+                <div class="profile-dropdown" id="profileDropdown">
+                    <a href="../guide-logout.php" class="profile-dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -157,6 +167,22 @@ $stmt->close();
         // Toggle sidebar on mobile
         document.getElementById('toggleSidebar').addEventListener('click', function() {
             document.getElementById('sidebar').classList.toggle('open');
+        });
+        
+        // Toggle profile dropdown
+        document.getElementById('profileWrapper').addEventListener('click', function(event) {
+    event.stopPropagation(); 
+    document.getElementById('profileDropdown').classList.toggle('active');
+});
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileWrapper = document.getElementById('profileWrapper');
+            const profileDropdown = document.getElementById('profileDropdown');
+            
+            if (!profileWrapper.contains(event.target)) {
+                profileDropdown.classList.remove('active');
+            }
         });
     </script>
 </body>

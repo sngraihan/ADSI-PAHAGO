@@ -184,8 +184,8 @@ function formatDuration($days, $hours) {
                 ?>
                 <div class="package-card">
                     <div class="package-image">
-                        <img src="<?php echo htmlspecialchars($row['image']); ?>" alt="<?php echo htmlspecialchars($row['title']); ?>">
-                        <?php if ($row['is_bestseller']): ?>
+                    <img src="<?php echo str_replace('../', '', $row['image_url']); ?>" alt="<?php echo $row['title']; ?>" class="card-img-top">
+                    <?php if ($row['is_bestseller']): ?>
                             <div class="package-badge bestseller">Terlaris</div>
                         <?php endif; ?>
                         <?php if ($row['is_popular']): ?>

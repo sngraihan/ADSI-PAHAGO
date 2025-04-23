@@ -549,41 +549,4 @@ a {
   }
 }
 
-/* Gaya untuk kelola-paket.php */
-.sidebar {
-  width: 250px;
-  background-color: #ffffff;
-  border-right: 1px solid #e5e7eb;
-  position: fixed;
-  height: 100vh;
-  overflow-y: auto;
-  transition: transform 0.3s ease;
-}
 
-.sidebar.closed {
-  transform: translateX(-100%);
-}
-
-.toggle-btn {
-  cursor: pointer;
-  margin: 10px;
-}
-
-.profile-dropdown {
-  display: none;
-  position: absolute;
-  right: 20px;
-  top: 60px;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.profile-dropdown.active {
-  display: block;
-}
-
-.profile-pic {
-  cursor: pointer;
-}

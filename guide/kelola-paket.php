@@ -30,6 +30,7 @@ $stmt->close();
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,6 +40,7 @@ $stmt->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="dashboard">
         <!-- Sidebar -->
@@ -70,18 +72,19 @@ $stmt->close();
                     <span>Laporan Perjalanan</span>
                 </a>
             </div>
-            
+
             <!-- User Profile -->
             <div class="user-profile">
                 <div class="profile-wrapper" id="profileWrapper">
-                    <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($guide_name); ?>&background=1e6aff&color=fff" alt="Profile" class="profile-image">
+                    <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($guide_name); ?>&background=1e6aff&color=fff"
+                        alt="Profile" class="profile-image">
                     <div class="profile-info">
                         <div class="profile-name"><?php echo htmlspecialchars($guide_name); ?></div>
                         <div class="profile-role">Pemandu Wisata</div>
                     </div>
                     <i class="fas fa-chevron-down profile-arrow"></i>
                 </div>
-                
+
                 <div class="profile-dropdown" id="profileDropdown">
                     <a href="../guide-logout.php" class="profile-dropdown-item">
                         <i class="fas fa-sign-out-alt"></i>
@@ -90,19 +93,19 @@ $stmt->close();
                 </div>
             </div>
         </div>
-        
+
         <!-- Main Content -->
         <div class="content">
             <div class="content-header">
                 <button class="toggle-sidebar" id="toggleSidebar">
                     <i class="fas fa-bars"></i>
                 </button>
-                
+
                 <div class="content-title">
                     <h1>Kelola Paket Wisata</h1>
                     <p>Kelola paket wisata Anda dengan mudah. Tambah, edit, atau hapus sesuai kebutuhan</p>
                 </div>
-                
+
                 <div style="display: flex; align-items: center;">
                     <div class="notification">
                         <i class="fas fa-bell"></i>
@@ -113,77 +116,83 @@ $stmt->close();
                     </a>
                 </div>
             </div>
-            
+
             <?php if (empty($packages)): ?>
-            <!-- Empty State -->
-            <div class="empty-state">
-                <i class="fas fa-box-open"></i>
-                <h3>Belum Ada Paket Wisata</h3>
-                <p>Anda belum memiliki paket wisata. Mulai tambahkan paket wisata pertama Anda.</p>
-                <a href="tambah-paket.php" class="btn-add">
-                    <i class="fas fa-plus"></i> Tambah Paket Wisata
-                </a>
-            </div>
-            <?php else: ?>
-            <!-- Package Grid -->
-            <div class="package-grid">
-                <?php foreach ($packages as $package): ?>
-                <div class="package-card">
-                    <div class="package-image">
-                        <img src="<?php echo htmlspecialchars($package['image_url'] ?? '../img/snorkeling.png'); ?>" alt="<?php echo htmlspecialchars($package['title']); ?>">
-                        <div class="package-status <?php echo $package['status'] == 'active' ? 'status-active' : 'status-draft'; ?>">
-                            <?php echo $package['status'] == 'active' ? 'Aktif' : 'Draft'; ?>
-                        </div>
-                    </div>
-                    <div class="package-content">
-                        <h3 class="package-title"><?php echo htmlspecialchars($package['title']); ?></h3>
-                        <div class="package-info">
-                            <div class="info-item">
-                                <i class="fas fa-users"></i>
-                                <span>Kapasitas: <?php echo $package['max_participants']; ?> orang</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fas fa-tag"></i>
-                                <span>Rp <?php echo number_format($package['price'], 0, ',', '.'); ?>/orang</span>
-                            </div>
-                        </div>
-                        <div class="package-actions">
-                            <a href="edit-paket.php?id=<?php echo $package['id']; ?>" class="btn-edit">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                            <a href="hapus-paket.php?id=<?php echo $package['id']; ?>" class="btn-delete" onclick="return confirm('Apakah Anda yakin ingin menghapus paket ini?')">
-                                <i class="fas fa-trash"></i> Hapus
-                            </a>
-                        </div>
-                    </div>
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <h3>Belum Ada Paket Wisata</h3>
+                    <p>Anda belum memiliki paket wisata. Mulai tambahkan paket wisata pertama Anda.</p>
+                    <a href="tambah-paket.php" class="btn-add">
+                        <i class="fas fa-plus"></i> Tambah Paket Wisata
+                    </a>
                 </div>
-                <?php endforeach; ?>
-            </div>
+            <?php else: ?>
+                <!-- Package Grid -->
+                <div class="package-grid">
+                    <?php foreach ($packages as $package): ?>
+                        <div class="package-card">
+                            <div class="package-image">
+                                <img src="<?php echo htmlspecialchars($package['image_url'] ?? '../img/snorkeling.png'); ?>"
+                                    alt="<?php echo htmlspecialchars($package['title']); ?>">
+                                <div
+                                    class="package-status <?php echo $package['status'] == 'active' ? 'status-active' : 'status-draft'; ?>">
+                                    <?php echo $package['status'] == 'active' ? 'Aktif' : 'Draft'; ?>
+                                </div>
+                            </div>
+                            <div class="package-content">
+                                <h3 class="package-title"><?php echo htmlspecialchars($package['title']); ?></h3>
+                                <div class="package-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-users"></i>
+                                        <span>Kapasitas: <?php echo $package['max_participants']; ?> orang</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-tag"></i>
+                                        <span>Rp <?php echo number_format($package['price'], 0, ',', '.'); ?>/orang</span>
+                                    </div>
+                                </div>
+                                <div class="package-actions">
+                                    <a href="edit-paket.php?id=<?php echo $package['id']; ?>" class="btn-edit">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="hapus-paket.php?id=<?php echo $package['id']; ?>" class="btn-delete"
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus paket ini?')">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             <?php endif; ?>
         </div>
     </div>
 
     <script>
         // Toggle sidebar on mobile
-        document.getElementById('toggleSidebar').addEventListener('click', function() {
+        document.getElementById('toggleSidebar').addEventListener('click', function () {
             document.getElementById('sidebar').classList.toggle('open');
         });
-        
+
         // Toggle profile dropdown
-        document.getElementById('profileWrapper').addEventListener('click', function(event) {
-    event.stopPropagation(); 
-    document.getElementById('profileDropdown').classList.toggle('active');
-});
-        
+        document.getElementById('profileWrapper').addEventListener('click', function (event) {
+            event.stopPropagation();
+            document.getElementById('profileDropdown').classList.toggle('active');
+        });
+
         // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const profileWrapper = document.getElementById('profileWrapper');
             const profileDropdown = document.getElementById('profileDropdown');
-            
+
             if (!profileWrapper.contains(event.target)) {
                 profileDropdown.classList.remove('active');
             }
         });
     </script>
+    <script src="../js/kelola-paket.js"></script>
+
 </body>
+
 </html>

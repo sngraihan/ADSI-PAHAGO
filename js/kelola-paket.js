@@ -1,22 +1,46 @@
+// Toggle sidebar on mobile
 function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('closed');
+  const sidebar = document.getElementById("sidebar")
+  sidebar.classList.toggle("closed")
 }
 
-function toggleDropdown() {
-    const dropdown = document.getElementById('profileDropdown');
-    dropdown.classList.toggle('active');
+// Toggle profile dropdown with proper event handling
+function toggleDropdown(event) {
+  if (event) {
+    event.stopPropagation()
+  }
+  const dropdown = document.getElementById("profileDropdown")
+  if (dropdown) {
+    dropdown.classList.toggle("active")
+  }
 }
 
 // Close dropdown if clicked outside
-window.onclick = function(event) {
-    if (!event.target.matches('.profile-pic')) {
-        const dropdowns = document.getElementsByClassName("profile-dropdown");
-        for (let i = 0; i < dropdowns.length; i++) {
-            const openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('active')) {
-                openDropdown.classList.remove('active');
-            }
-        }
-    }
-}
+document.addEventListener("click", (event) => {
+  const profileWrapper = document.getElementById("profileWrapper")
+  const profileDropdown = document.getElementById("profileDropdown")
+
+  if (
+    profileWrapper &&
+    profileDropdown &&
+    !profileWrapper.contains(event.target) &&
+    !profileDropdown.contains(event.target)
+  ) {
+    profileDropdown.classList.remove("active")
+  }
+})
+
+// Add event listeners when the DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  // Profile dropdown toggle
+  const profileWrapper = document.getElementById("profileWrapper")
+  if (profileWrapper) {
+    profileWrapper.addEventListener("click", toggleDropdown)
+  }
+
+  // Sidebar toggle
+  const toggleBtn = document.getElementById("toggleSidebar")
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", toggleSidebar)
+  }
+})

@@ -255,7 +255,7 @@
 
 /* User Profile */
 .user-profile {
-  position: fixed;
+  position: relative;
   bottom: 0;
   width: 250px;
   padding: 16px;
@@ -265,11 +265,12 @@
   flex-direction: column;
 }
 
+/* Ensure the wrapper is properly styled as clickable */
 .profile-wrapper {
+  cursor: pointer;
   display: flex;
   align-items: center;
-  cursor: pointer;
-  padding: 5px;
+  padding: 10px;
   border-radius: 8px;
   transition: background-color 0.2s;
 }
@@ -307,19 +308,19 @@
   transition: transform 0.2s;
 }
 
+/* Fix position and style of the dropdown menu */
 .profile-dropdown {
-  margin-top: 10px;
+  position: absolute;
+  bottom: 60px;
+  left: 16px;
+  right: 16px;
+  width: calc(100% - 32px);
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  z-index: 1000;
   display: none;
-  position: absolute;  /* ⬅️ Tambahkan ini */
-  bottom: 60px;         /* ⬅️ Atur agar muncul di atas user-profile */
-  left: 16px;           /* ⬅️ Atur sesuai kebutuhan */
-  z-index: 9999;        /* ⬅️ Pastikan tidak ketutupan */
 }
-
 
 .profile-dropdown.active {
   display: block;
@@ -328,7 +329,7 @@
 .profile-dropdown-item {
   display: flex;
   align-items: center;
-  padding: 10px 15px;
+  padding: 12px 16px;
   color: #333;
   text-decoration: none;
   transition: background-color 0.2s;

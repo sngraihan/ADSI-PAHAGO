@@ -139,8 +139,8 @@ function formatDuration($days, $hours) {
                                 </div>
                             </li>
                         <?php else: ?>
-                            <li><a href="login.php">Masuk</a></li>
-                            <li><a href="register.php" class="btn-primary">Daftar</a></li>
+                            <li><a href="login.html">Masuk</a></li>
+                            <li><a href="register.html" class="btn-primary">Daftar</a></li>
                         <?php endif; ?>
                     </ul>
                 </nav>
@@ -264,7 +264,7 @@ function formatDuration($days, $hours) {
                         <li><a href="packages.php">Paket Wisata</a></li>
                         <li><a href="status.php">Status Perjalanan</a></li>
                         <?php if (!$isLoggedIn): ?>
-                            <li><a href="login.php">Masuk</a></li>
+                            <li><a href="login.html">Masuk</a></li>
                         <?php endif; ?>
                     </ul>
                 </div>

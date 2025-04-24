@@ -471,64 +471,6 @@ foreach ($defaultImages as $img) {
         </div>
     </section>
 
-    <!-- Related Packages -->
-    <section class="related-packages">
-        <div class="container">
-            <h2 class="section-title">Paket Wisata Lainnya</h2>
-            <div class="packages-grid">
-                <?php
-                // Display related packages
-                $relatedResults = isset($popularResult) ? $popularResult : $similarResult;
-
-                while ($related = $relatedResults->fetch_assoc()) {
-                    ?>
-                    <div class="package-card">
-                        <div class="package-image">
-                            <img src="<?php echo fixImagePath($related['image_url']); ?>"
-                                alt="<?php echo htmlspecialchars($related['title']); ?>">
-                            <?php if ($related['is_bestseller']): ?>
-                                <div class="package-badge bestseller">Terlaris</div>
-                            <?php endif; ?>
-                            <?php if ($related['is_popular']): ?>
-                                <div class="package-badge popular">Popular</div>
-                            <?php endif; ?>
-                        </div>
-                        <div class="package-content">
-                            <h3><?php echo htmlspecialchars($related['title']); ?></h3>
-                            <div class="package-rating">
-                                <div class="stars">
-                                    <?php echo formatRating($related['rating']); ?>
-                                </div>
-                                <span class="rating-text">(<?php echo $related['rating']; ?>/5)</span>
-                            </div>
-                            <div class="package-details">
-                                <div class="detail">
-                                    <i class="far fa-clock"></i>
-                                    <?php echo formatDuration($related['duration_days'], $related['duration_hours']); ?>
-                                </div>
-                                <div class="detail">
-                                    <i class="fas fa-users"></i>
-                                    Maks <?php echo $related['max_participants']; ?> Orang
-                                </div>
-                            </div>
-                            <p class="package-description">
-                                <?php echo htmlspecialchars($related['short_description'] ?? substr($related['description'], 0, 100) . '...'); ?>
-                            </p>
-                            <div class="package-footer">
-                                <div class="price">
-                                    <span class="price-amount">Rp <?php echo formatRupiah($related['price']); ?></span>
-                                    <span class="price-unit">/orang</span>
-                                </div>
-                                <a href="package-detail.php?id=<?php echo $related['id']; ?>" class="btn-primary">Detail</a>
-                            </div>
-                        </div>
-                    </div>
-                    <?php
-                }
-                ?>
-            </div>
-        </div>
-    </section>
 
     <!-- footer -->
     <footer class="footer">

@@ -42,17 +42,26 @@ $message = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get form data
-    $title = clean_input($conn, $_POST['title']);
-    $description = clean_input($conn, $_POST['description']);
-    $price = clean_input($conn, $_POST['price']);
-    $max_participants = clean_input($conn, $_POST['max_participants']);
-    $duration_days = clean_input($conn, $_POST['duration_days']);
-    $status = clean_input($conn, $_POST['status']);
+    // Get and validate data
+    $title = isset($_POST['title']) ? trim($_POST['title']) : '';
+    $description = isset($_POST['description']) ? trim($_POST['description']) : '';
+    $price = isset($_POST['price']) ? (int)$_POST['price'] : 0;
+    $max_participants = isset($_POST['max_participants']) ? (int)$_POST['max_participants'] : 0;
+    $duration_days = isset($_POST['duration_days']) ? (int)$_POST['duration_days'] : 0;
     
-    // Validate input
-    if (empty($title) || empty($description) || empty($price) || empty($max_participants) || empty($duration_days)) {
-        $error = "Semua field harus diisi";
+    // Strict validation for status - only allow exactly 'active' or 'draft'
+    if (isset($_POST['status']) && $_POST['status'] === 'active') {
+        $status = 'active';
+    } else if (isset($_POST['status']) && $_POST['status'] === 'draft') {
+        $status = 'draft';
+    } else {
+        $error = "Status tidak valid. Nilai harus tepat 'active' atau 'draft'.";
+        $status = '';
+    }
+    
+if (empty($status)) {
+        // Status validation failed
+        // Error already set above
     } else {
         // Handle image upload if a new image is provided
         $image_url = $package['image_url']; // Keep existing image by default
@@ -84,26 +93,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         if (empty($error)) {
-            // Update package in database
-            $stmt = $conn->prepare("UPDATE packages SET title = ?, description = ?, price = ?, max_participants = ?, duration_days = ?, image_url = ?, status = ?, updated_at = NOW() WHERE id = ? AND guide_id = ?");
-            $stmt->bind_param("ssiissiii", $title, $description, $price, $max_participants, $duration_days, $image_url, $status, $package_id, $guide_id);
+            // Title and description need mysqli_real_escape_string
+            $title = mysqli_real_escape_string($conn, $title);
+            $description = mysqli_real_escape_string($conn, $description);
             
-            if ($stmt->execute()) {
+            // Use a direct query instead of prepared statement for debugging
+            $query = "UPDATE packages SET 
+                    title = '$title', 
+                    description = '$description', 
+                    price = $price, 
+                    max_participants = $max_participants, 
+                    duration_days = $duration_days";
+            
+            // Only update image if we have a valid URL
+            if (!empty($image_url)) {
+                $image_url = mysqli_real_escape_string($conn, $image_url);
+                $query .= ", image_url = '$image_url'";
+            }
+            
+            $query .= ", status = '$status', updated_at = NOW() WHERE id = $package_id AND guide_id = $guide_id";
+            
+            if ($conn->query($query)) {
                 $message = "Paket wisata berhasil diperbarui";
                 // Refresh package data
-                $stmt = $conn->prepare("SELECT * FROM packages WHERE id = ? AND guide_id = ?");
-                $stmt->bind_param("ii", $package_id, $guide_id);
-                $stmt->execute();
-                $result = $stmt->get_result();
+                $result = $conn->query("SELECT * FROM packages WHERE id = $package_id AND guide_id = $guide_id");
                 $package = $result->fetch_assoc();
             } else {
                 $error = "Gagal memperbarui paket wisata: " . $conn->error;
             }
-            
-            $stmt->close();
         }
     }
 }
+
+// Rest of your HTML code remains the same...
 ?>
 
 <!DOCTYPE html>
@@ -116,6 +138,158 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../css/guide.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px;
+            background-color: #f5f8ff;
+        }
+        
+        .form-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 24px;
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #1e6aff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(30, 106, 255, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        .btn-cancel, .btn-submit {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .btn-cancel {
+            background-color: #f2f2f2;
+            color: #666;
+            border: none;
+        }
+        
+        .btn-submit {
+            background-color: #1e6aff;
+            color: white;
+            border: none;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .btn-submit:hover {
+            background-color: #0052cc;
+        }
+        
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .image-preview-placeholder {
+            color: #888;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .image-preview-placeholder i {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .content {
+                margin-left: 0;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn-cancel, .btn-submit {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard">
@@ -168,7 +342,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 <div class="content-title">
                     <h1>Edit Paket Wisata</h1>
-                    <p>Perbarui informasi paket wisata Anda</p>
                 </div>
             </div>
             
@@ -207,46 +380,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     
                     <div class="form-group">
-                        <label for="description">Deskripsi Paket</label>
+                        <label for="description">Deskripsi Perjalanan</label>
                         <textarea id="description" name="description" class="form-control" required><?php echo htmlspecialchars($package['description']); ?></textarea>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label for="price">Harga per Orang (Rp)</label>
-                                <input type="number" id="price" name="price" class="form-control" value="<?php echo $package['price']; ?>" required>
-                            </div>
-                        </div>
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label for="max_participants">Kapasitas Maksimum</label>
-                                <input type="number" id="max_participants" name="max_participants" class="form-control" value="<?php echo $package['max_participants']; ?>" required>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="price">Harga Per Orang (Rupiah)</label>
+                        <input type="number" id="price" name="price" class="form-control" value="<?php echo $package['price']; ?>" required>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label for="duration_days">Durasi (Hari)</label>
-                                <input type="number" id="duration_days" name="duration_days" class="form-control" value="<?php echo $package['duration_days']; ?>" required>
-                            </div>
-                        </div>
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label for="status">Status</label>
-                                <select id="status" name="status" class="form-control" required>
-                                    <option value="active" <?php echo $package['status'] == 'active' ? 'selected' : ''; ?>>Aktif</option>
-                                    <option value="draft" <?php echo $package['status'] == 'draft' ? 'selected' : ''; ?>>Draft</option>
-                                </select>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="max_participants">Kapasitas Maksimum</label>
+                        <input type="number" id="max_participants" name="max_participants" class="form-control" value="<?php echo $package['max_participants']; ?>" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="duration_days">Durasi (Hari)</label>
+                        <input type="number" id="duration_days" name="duration_days" class="form-control" value="<?php echo $package['duration_days']; ?>" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status" class="form-control" required>
+                            <option value="" disabled>-- Pilih Status --</option>
+                            <option value="active" <?php echo $package['status'] == 'active' ? 'selected' : ''; ?>>Aktif</option>
+                            <option value="draft" <?php echo $package['status'] == 'draft' ? 'selected' : ''; ?>>Draft</option>
+                        </select>
                     </div>
                     
                     <div class="form-actions">
                         <a href="kelola-paket.php" class="btn-cancel">Batal</a>
-                        <button type="submit" class="btn-submit">Simpan Perubahan</button>
+                        <button type="submit" class="btn-submit">Simpan</button>
                     </div>
                 </form>
             </div>

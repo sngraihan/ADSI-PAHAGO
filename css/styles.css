@@ -38,7 +38,7 @@ a {
   display: inline-block;
   background-color: var(--primary-color);
   color: var(--white);
-  padding: 10px 20px;
+  padding: 8px 20px;
   border-radius: 50px;
   font-weight: 500;
   border: none;
@@ -75,22 +75,23 @@ a {
   justify-content: space-between;
   align-items: center;
   height: 60px;
+  width: 120%;
 }
 
 .nav-menu {
-  margin-left: auto;
-  padding-right: 30px;
+  margin-left: auto; /* Push menu to the right */
 }
 
 .nav-menu ul {
   display: flex;
-  gap: 30px;
+  gap: 20px;
   align-items: center;
 }
 
 .nav-menu a {
   font-weight: 500;
   transition: var(--transition);
+  padding: 5px 10px;
 }
 
 .nav-menu a:hover,
@@ -552,5 +553,3 @@ a {
     border: 1px solid #eee;
   }
 }
-
-

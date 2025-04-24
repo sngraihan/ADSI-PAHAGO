@@ -39,6 +39,201 @@ $stmt->close();
     <link rel="stylesheet" href="../css/guide.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles to match the new design */
+        .sidebar {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+        }
+        
+        .sidebar-logo span {
+            font-size: 16px;
+            font-weight: normal;
+        }
+        
+        .menu-item {
+            border-radius: 8px;
+            margin: 5px 15px;
+            padding: 10px 15px;
+        }
+        
+        .menu-item.active {
+            background-color: #f0f7ff;
+            border-left: none;
+            color: #1e6aff;
+            font-weight: 600;
+        }
+        
+        .menu-item i {
+            font-size: 16px;
+            width: 24px;
+        }
+        
+        .content {
+            background-color: #f9fbff;
+        }
+        
+        .content-header {
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .notification {
+            cursor: pointer;
+        }
+        
+        .btn-add {
+            background-color: #1e6aff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            color: white;
+        }
+        
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .package-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .package-status {
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background-color: #00C28C;
+        }
+        
+        .status-draft {
+            background-color: #FF9F1C;
+        }
+        
+        .package-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin: 10px 0 15px;
+        }
+        
+        .info-item {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-item i {
+            color: #666;
+        }
+        
+        .package-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-edit, .btn-delete {
+            flex: 1;
+            text-align: center;
+            padding: 8px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .btn-edit {
+            background-color: #f0f7ff;
+            color: #1e6aff;
+            border: 1px solid #1e6aff;
+        }
+        
+        .btn-delete {
+            background-color: #fff0f0;
+            color: #ff3b3b;
+            border: 1px solid #ff3b3b;
+        }
+        
+        .user-profile {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 250px;
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        .profile-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        
+        .profile-wrapper:hover {
+            background-color: #f5f8ff;
+        }
+        
+        .profile-dropdown {
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
+            width: 210px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .profile-dropdown.active {
+            display: block;
+        }
+        
+        .profile-dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .profile-dropdown-item:hover {
+            background-color: #f5f8ff;
+        }
+
+        @media (max-width: 1200px) {
+            .package-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .package-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -129,11 +324,11 @@ $stmt->close();
                 </div>
             <?php else: ?>
                 <!-- Package Grid -->
-                <div class="package-grid">
+                <div class="package-grid" style="margin-top: 24px;">
                     <?php foreach ($packages as $package): ?>
                         <div class="package-card">
                             <div class="package-image">
-                                <img src="<?php echo htmlspecialchars($package['image_url'] ?? '../img/snorkeling.png'); ?>"
+                                <img src="<?php echo htmlspecialchars($package['image_url'] ?? '../img/camping.png'); ?>"
                                     alt="<?php echo htmlspecialchars($package['title']); ?>">
                                 <div
                                     class="package-status <?php echo $package['status'] == 'active' ? 'status-active' : 'status-draft'; ?>">
@@ -141,23 +336,22 @@ $stmt->close();
                                 </div>
                             </div>
                             <div class="package-content">
-                                <h3 class="package-title"><?php echo htmlspecialchars($package['title']); ?></h3>
+                                <h3 class="package-title">Weekend Getaway 2D1N</h3>
                                 <div class="package-info">
                                     <div class="info-item">
                                         <i class="fas fa-users"></i>
-                                        <span>Kapasitas: <?php echo $package['max_participants']; ?> orang</span>
+                                        <span>Kapasitas: 8 orang</span>
                                     </div>
                                     <div class="info-item">
                                         <i class="fas fa-tag"></i>
-                                        <span>Rp <?php echo number_format($package['price'], 0, ',', '.'); ?>/orang</span>
+                                        <span>Rp 1.250.000/orang</span>
                                     </div>
                                 </div>
                                 <div class="package-actions">
                                     <a href="edit-paket.php?id=<?php echo $package['id']; ?>" class="btn-edit">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <a href="hapus-paket.php?id=<?php echo $package['id']; ?>" class="btn-delete"
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus paket ini?')">
+                                    <a href="#" class="btn-delete" onclick="confirmDelete(<?php echo $package['id']; ?>)">
                                         <i class="fas fa-trash"></i> Hapus
                                     </a>
                                 </div>
@@ -190,9 +384,14 @@ $stmt->close();
                 profileDropdown.classList.remove('active');
             }
         });
+        
+        // Function to confirm delete
+        function confirmDelete(packageId) {
+            if (confirm('Apakah Anda yakin ingin menghapus paket ini?')) {
+                window.location.href = 'hapus-paket.php?id=' + packageId;
+            }
+        }
     </script>
-    <script src="../js/kelola-paket.js"></script>
-
 </body>
 
 </html>

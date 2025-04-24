@@ -215,7 +215,7 @@ function formatDuration($days, $hours) {
                                 <span class="price-amount">Rp <?php echo formatRupiah($row['price']); ?></span>
                                 <span class="price-unit">/orang</span>
                             </div>
-                            <a href="booking.php?package_id=<?php echo $row['id']; ?>" class="btn-primary">Pesan</a>
+                            <a href="package-detail.php?id=<?php echo $row['id']; ?>" class="btn-primary">Pesan</a>
                         </div>
                     </div>
                 </div>

@@ -26,6 +26,10 @@ if ($result->num_rows > 0) {
     }
 }
 $stmt->close();
+
+function formatRupiah($angka) {
+    return number_format($angka, 0, ',', '.');
+}
 ?>
 
 <!DOCTYPE html>
@@ -336,15 +340,15 @@ $stmt->close();
                                 </div>
                             </div>
                             <div class="package-content">
-                                <h3 class="package-title">Weekend Getaway 2D1N</h3>
-                                <div class="package-info">
+                                  <h3 class="package-title"><?php echo htmlspecialchars($package['title']); ?></h3>
+                                  <div class="package-info">
                                     <div class="info-item">
                                         <i class="fas fa-users"></i>
-                                        <span>Kapasitas: 8 orang</span>
+                                        Kapasitas: <?php echo htmlspecialchars($package['max_participants']); ?> orang
                                     </div>
                                     <div class="info-item">
                                         <i class="fas fa-tag"></i>
-                                        <span>Rp 1.250.000/orang</span>
+                                        <span>Rp <?php echo formatRupiah($package['price']); ?>/orang</span>
                                     </div>
                                 </div>
                                 <div class="package-actions">

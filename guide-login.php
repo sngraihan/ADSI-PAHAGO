@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         .login-image {
             flex: 1;
-            background-image: url('img/guide-login-bg.jpg');
+            background-image: url('img/guide-login-bg.png');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -326,7 +326,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="checkbox" id="remember" name="remember">
                         <label for="remember">Ingat saya</label>
                     </div>
-                    <a href="#" class="forgot-password">Lupa kata sandi?</a>
                 </div>
                 
                 <button type="submit" class="login-button">Masuk</button>

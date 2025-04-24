@@ -173,7 +173,6 @@ function formatDuration($days, $hours) {
                 <a href="?duration=1h<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="filter-tab <?php echo $duration == '1h' ? 'active' : ''; ?>">1 Hari</a>
                 <a href="?duration=2h1m<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="filter-tab <?php echo $duration == '2h1m' ? 'active' : ''; ?>">2H1M</a>
                 <a href="?duration=3h2m<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="filter-tab <?php echo $duration == '3h2m' ? 'active' : ''; ?>">3H2M</a>
-                <a href="?duration=custom<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="filter-tab <?php echo $duration == 'custom' ? 'active' : ''; ?>">Kustom</a>
             </div>
 
             <!-- Packages Grid -->
@@ -231,9 +230,7 @@ function formatDuration($days, $hours) {
             <!-- Load More / Pagination -->
             <?php if ($totalPages > 1): ?>
             <div class="pagination-container">
-                <?php if ($page < $totalPages): ?>
-                <a href="?page=<?php echo $page + 1; ?>&duration=<?php echo $duration; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="load-more-btn">Muat Lebih Banyak</a>
-                <?php endif; ?>
+
                 
                 <div class="pagination">
                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>

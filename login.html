@@ -13,114 +13,220 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <style>
+      body {
+        background-color: #f5f7ff;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .login-container {
+        display: flex;
+        max-width: 900px;
+        width: 90%;
+        background-color: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .login-image {
+        flex: 1;
+        background-image: url("img/login-bg.png");
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        min-height: 500px;
+      }
+
+      .login-image-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        padding: 30px;
+        color: white;
+      }
+
+      .login-image-overlay h2 {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+
+      .login-image-overlay p {
+        opacity: 0.9;
+        margin: 0;
+      }
+
+      .login-form {
+        flex: 1;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .login-header {
+        margin-bottom: 30px;
+      }
+
+      .login-header h2 {
+        color: #1e6aff;
+        font-size: 28px;
+        margin-bottom: 0;
+      }
+
+      .login-header .subtitle {
+        font-size: 22px;
+        color: #333;
+        font-weight: 600;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+
+      .login-header p {
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+        font-weight: 500;
+      }
+
+      .input-icon-wrapper {
+        position: relative;
+      }
+
+      .input-icon-wrapper i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+      }
+
+      .input-icon-wrapper input {
+        padding: 12px 15px 12px 45px;
+        width: 100%;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s;
+      }
+
+      .input-icon-wrapper input:focus {
+        border-color: #1e6aff;
+        box-shadow: 0 0 0 2px rgba(30, 106, 255, 0.2);
+        outline: none;
+      }
+
+      .remember-me {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .remember-me input {
+        margin-right: 8px;
+      }
+
+      .btn-login {
+        background-color: #1e6aff;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+
+      .btn-login:hover {
+        background-color: #0052e0;
+      }
+
+      .login-footer {
+        margin-top: 20px;
+        text-align: center;
+        color: #666;
+      }
+
+      .login-footer a {
+        color: #1e6aff;
+        font-weight: 500;
+        text-decoration: none;
+      }
+
+      @media (max-width: 768px) {
+        .login-container {
+          flex-direction: column;
+          width: 95%;
+        }
+        
+        .login-image {
+          min-height: 200px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <!-- Navigation Bar -->
-    <header class="navbar">
-      <div class="container">
-        <div class="navbar-content">
-          <a href="index.php" class="logo">PahaGo</a>
-          <nav class="nav-menu">
-            <ul>
-              <li><a href="index.php">Beranda</a></li>
-              <li><a href="packages.php">Paket Wisata</a></li>
-              <li><a href="status.html">Status Perjalanan</a></li>
-              <li><a href="login.html" class="active">Masuk</a></li>
-              <li><a href="register.html" class="btn-primary">Daftar</a></li>
-            </ul>
-          </nav>
-          <button class="menu-toggle" id="menuToggle">
-            <i class="fas fa-bars"></i>
-          </button>
+    <div class="login-container">
+      <div class="login-image">
+        <div class="login-image-overlay">
+          <h2>Selamat Datang di Pahawang Go</h2>
+          <p>Gerbang Anda menuju surga Pahawang</p>
         </div>
       </div>
-    </header>
-
-    <!-- Login Form -->
-    <section class="auth-section">
-      <div class="container">
-        <div class="auth-card">
-          <h2>Masuk ke PahaGo</h2>
-          <p class="auth-subtitle">
-            Masukkan email dan password Anda untuk melanjutkan
-          </p>
-
-          <form id="loginForm" class="auth-form">
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="nama@email.com"
-                required
-              />
+      <div class="login-form">
+        <div class="login-header">
+          <h2>PahaGo</h2>
+          <p class="subtitle">Masuk ke Akun Anda</p>
+          <p>Silakan masukkan detail Anda.</p>
+        </div>
+        
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="email">Alamat Email</label>
+            <div class="input-icon-wrapper">
+              <i class="far fa-envelope"></i>
+              <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required>
             </div>
-
-            <div class="form-group">
-              <div class="password-header">
-                <label for="password">Password</label>
-              </div>
-              <input type="password" id="password" name="password" required />
-            </div>
-
-            <button type="button" class="btn-primary full-width" id="loginBtn">
-              Masuk
-            </button>
-          </form>
-
-          <div class="auth-footer">
-            <p>Belum punya akun? <a href="register.html">Daftar sekarang</a></p>
           </div>
+          
+          <div class="form-group">
+            <label for="password">Kata Sandi</label>
+            <div class="input-icon-wrapper">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="password" name="password" placeholder="********" required>
+            </div>
+          </div>
+          
+          <div class="remember-me">
+            <input type="checkbox" id="remember" name="remember">
+            <label for="remember">Ingat saya</label>
+          </div>
+          
+          <button type="button" id="loginBtn" class="btn-login">Masuk</button>
+        </form>
+        
+        <div class="login-footer">
+          <p>Belum punya akun? <a href="register.html">Daftar gratis</a></p>
         </div>
       </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-content">
-          <div class="footer-section">
-            <h3>Tentang Pahago</h3>
-            <p>
-              Platform pemesanan paket wisata terpercaya untuk menjelajahi
-              keindahan Pahawang dan sekitarnya.
-            </p>
-          </div>
-
-          <div class="footer-section">
-            <h3>Navigasi Cepat</h3>
-            <ul>
-              <li><a href="index.php">Beranda</a></li>
-              <li><a href="packages.php">Paket Wisata</a></li>
-              <li><a href="status.html">Status Perjalanan</a></li>
-              <li><a href="login.html">Masuk</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-section">
-            <h3>Hubungi Kami</h3>
-            <ul class="contact-info">
-              <li><i class="fas fa-phone"></i> +62 812 3456 7890</li>
-              <li><i class="fas fa-envelope"></i> info@pahago.com</li>
-            </ul>
-          </div>
-
-          <div class="footer-section">
-            <h3>Media Sosial</h3>
-            <div class="social-icons">
-              <a href="#"><i class="fab fa-facebook"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-              <a href="#"><i class="fab fa-whatsapp"></i></a>
-            </div>
-          </div>
-        </div>
-
-        <div class="footer-bottom">
-          <p>&copy; 2025 Pahago. Seluruh hak cipta dilindungi.</p>
-        </div>
-      </div>
-    </footer>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/login.js"></script>

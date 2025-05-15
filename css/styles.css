@@ -70,13 +70,23 @@ a {
   z-index: 1000;
 }
 
+.navbar *, .nav-menu *, .logo {
+  all: unset;
+  display: revert;
+  box-sizing: border-box;
+}
+
 .navbar-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 60px;
-  width: 120%;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
+
 
 .nav-menu {
   margin-left: auto; /* Push menu to the right */
@@ -92,6 +102,7 @@ a {
   font-weight: 500;
   transition: var(--transition);
   padding: 5px 10px;
+  text-decoration: none;
 }
 
 .nav-menu a:hover,

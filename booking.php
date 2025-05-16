@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                     <div class="alert alert-danger"><?= $error_message ?></div>
                 <?php endif; ?>
 
-                <form method="post" action="" class="booking-form">
+                <form id="booking-form" method="post" action="payment.php" class="booking-form">
                     <div class="form-group">
                         <label for="nama_lengkap">Nama Lengkap</label>
                         <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Masukkan nama lengkap Anda" required>

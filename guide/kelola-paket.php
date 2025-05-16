@@ -258,10 +258,7 @@ function formatRupiah($angka) {
                     <i class="fas fa-check-circle"></i>
                     <span>Konfirmasi Kehadiran</span>
                 </a>
-                <a href="chat-pelanggan.php" class="menu-item">
-                    <i class="fas fa-comments"></i>
-                    <span>Chat Pelanggan</span>
-                </a>
+
                 <a href="kelola-paket.php" class="menu-item active">
                     <i class="fas fa-box"></i>
                     <span>Kelola Paket Wisata</span>
@@ -306,10 +303,7 @@ function formatRupiah($angka) {
                 </div>
 
                 <div style="display: flex; align-items: center;">
-                    <div class="notification">
-                        <i class="fas fa-bell"></i>
-                        <div class="notification-badge">2</div>
-                    </div>
+
                     <a href="tambah-paket.php" class="btn-add">
                         <i class="fas fa-plus"></i> Tambah Paket Wisata
                     </a>

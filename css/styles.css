@@ -70,10 +70,17 @@ a {
   z-index: 1000;
 }
 
-.navbar *, .nav-menu *, .logo {
-  all: unset;
-  display: revert;
+.navbar * {
   box-sizing: border-box;
+}
+
+.nav-menu * {
+  box-sizing: border-box;
+}
+
+.logo {
+  box-sizing: border-box;
+  display: inline-block;
 }
 
 .navbar-content {
@@ -96,6 +103,15 @@ a {
   display: flex;
   gap: 20px;
   align-items: center;
+  list-style: none !important; /* Tambahkan !important untuk memastikan override */
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li {
+  list-style: none !important; /* Pastikan li juga tidak memiliki bullets */
+  margin: 0;
+  padding: 0;
 }
 
 .nav-menu a {

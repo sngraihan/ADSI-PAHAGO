@@ -10,11 +10,25 @@ if (!isset($_SESSION['user_id'])) {
 // Koneksi ke database
 require_once 'includes/db.php'; 
 
-$isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
+$isLoggedIn = isset($_SESSION['user_id']) ? true : false;
+$user_id = $_SESSION['user_id'];
+
+// Ambil data user
+if ($isLoggedIn) {
+    $user_stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+    $user_stmt->bind_param("i", $user_id);
+    $user_stmt->execute();
+    $user_result = $user_stmt->get_result();
+    $user_data = $user_result->fetch_assoc();
+    $user_stmt->close();
+}
 
 // Ambil package dari database
 $package_id = isset($_GET['package_id']) ? intval($_GET['package_id']) : 1;
-$stmt = $conn->prepare("SELECT * FROM packages WHERE id = ?");
+$stmt = $conn->prepare("SELECT p.*, g.id as guide_id, g.name as guide_name 
+                       FROM packages p 
+                       JOIN guides g ON p.guide_id = g.id 
+                       WHERE p.id = ?");
 $stmt->bind_param("i", $package_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -26,12 +40,18 @@ if ($package_data) {
     $package = [
         'id' => $package_data['id'],
         'name' => $package_data['title'],
-        'duration' => "{$package_data['duration_days']} Hari, {$package_data['duration_hours']} Jam",
+        'duration_days' => $package_data['duration_days'],
+        'duration_hours' => $package_data['duration_hours'],
+        'duration' => ($package_data['duration_days'] > 0 ? "{$package_data['duration_days']} Hari" : "") . 
+                     (($package_data['duration_days'] > 0 && $package_data['duration_hours'] > 0) ? ", " : "") .
+                     ($package_data['duration_hours'] > 0 ? "{$package_data['duration_hours']} Jam" : ""),
         'price' => (int)$package_data['price'],
         'service_fee' => 50000,
         'image' => fixImagePath($package_data['image_url']),
         'max_participants' => $package_data['max_participants'],
-        'location' => $package_data['location'] ?? "Pulau Pahawang, Lampung" // Default location
+        'guide_id' => $package_data['guide_id'],
+        'guide_name' => $package_data['guide_name'],
+        'location' => "Pulau Pahawang, Lampung" // Default location
     ];
 } else {
     // fallback
@@ -42,14 +62,26 @@ if ($package_data) {
         'duration' => '-',
         'price' => 0,
         'service_fee' => 0,
-        'image' => 'placeholder.jpg'
+        'image' => 'img/placeholder.jpg',
+        'guide_id' => 1
     ];
 }
-function fixImagePath($path) {
-    // Misalnya /img/snorkeling.png
-    return ltrim(str_replace(['../', './'], '', $path), '/');
-}
 
+function fixImagePath($path) {
+    if (empty($path)) return 'img/placeholder.jpg';
+    
+    // Jika path dimulai dengan ../
+    if (strpos($path, '../') === 0) {
+        return ltrim(str_replace('../', '', $path), '/');
+    }
+    
+    // Jika path dimulai dengan ./
+    if (strpos($path, './') === 0) {
+        return ltrim(str_replace('./', '', $path), '/');
+    }
+    
+    return $path;
+}
 
 // Proses form booking
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
@@ -58,38 +90,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
     $telepon = htmlspecialchars($_POST['telepon']);
     $jumlah_peserta = intval($_POST['jumlah_peserta']);
     $tanggal = htmlspecialchars($_POST['tanggal']);
-    $catatan = htmlspecialchars($_POST['catatan']);
+    $catatan = htmlspecialchars($_POST['catatan'] ?? '');
 
     if (empty($nama) || !$email || empty($telepon) || $jumlah_peserta < 1 || empty($tanggal)) {
         $error_message = "Semua field wajib diisi dengan benar.";
     } else {
-        $user_id = $_SESSION['user_id'];
+        $travel_date = date('Y-m-d', strtotime($tanggal));
         $total_price = ($package['price'] * $jumlah_peserta) + $package['service_fee'];
 
-        // Simpan ke tabel pemesanan
-        $stmt = $conn->prepare("INSERT INTO pemesanan (user_id, package_id, jumlah_peserta, tanggal_pemesanan, status) VALUES (?, ?, ?, ?, 'pending')");
-        $stmt->bind_param("iiis", $user_id, $package['id'], $jumlah_peserta, $tanggal);
-        $stmt->execute();
-        $pemesanan_id = $stmt->insert_id;
-        $stmt->close();
+        // Simpan ke tabel orders
+        $stmt = $conn->prepare("INSERT INTO orders (user_id, package_id, guide_id, travel_date, participants, total_price, status, notes) 
+                               VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)");
+        $stmt->bind_param("iiisids", $user_id, $package['id'], $package['guide_id'], $travel_date, $jumlah_peserta, $total_price, $catatan);
+        
+        if ($stmt->execute()) {
+            $order_id = $stmt->insert_id;
+            $stmt->close();
 
-        // Simpan detail ke session
-        $_SESSION['booking'] = [
-            'pemesanan_id' => $pemesanan_id,
-            'package_id' => $package['id'],
-            'package_name' => $package['name'],
-            'nama' => $nama,
-            'email' => $email,
-            'telepon' => $telepon,
-            'jumlah_peserta' => $jumlah_peserta,
-            'tanggal' => $tanggal,
-            'catatan' => $catatan,
-            'total_price' => $total_price,
-            'service_fee' => $package['service_fee']
-        ];
+            // Simpan detail ke session
+            $_SESSION['booking'] = [
+                'order_id' => $order_id,
+                'package_id' => $package['id'],
+                'package_name' => $package['name'],
+                'guide_id' => $package['guide_id'],
+                'guide_name' => $package['guide_name'],
+                'nama' => $nama,
+                'email' => $email,
+                'telepon' => $telepon,
+                'jumlah_peserta' => $jumlah_peserta,
+                'tanggal' => $tanggal,
+                'catatan' => $catatan,
+                'total_price' => $total_price,
+                'service_fee' => $package['service_fee']
+            ];
 
-        header("Location: payment.php");
-        exit();
+            header("Location: payment.php");
+            exit();
+        } else {
+            $error_message = "Terjadi kesalahan saat menyimpan pesanan. Silakan coba lagi.";
+        }
     }
 }
 ?>
@@ -118,15 +157,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                         <?php if ($isLoggedIn): ?>
                             <li class="profile-dropdown">
                                 <div class="profile-trigger">
-                                    <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['user_name']); ?>&background=1e6aff&color=fff&size=32"
+                                    <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['user_name'] ?? 'User'); ?>&background=1e6aff&color=fff&size=32"
                                         class="profile-image" alt="Profile">
                                 </div>
                                 <div class="dropdown-menu">
                                     <div class="dropdown-header">
-                                        <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['user_name']); ?>&background=1e6aff&color=fff&size=64"
+                                        <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['user_name'] ?? 'User'); ?>&background=1e6aff&color=fff&size=64"
                                             class="dropdown-profile-image" alt="Profile">
                                         <div class="dropdown-profile-info">
-                                            <span class="dropdown-profile-name"><?php echo $_SESSION['user_name']; ?></span>
+                                            <span class="dropdown-profile-name"><?php echo $_SESSION['user_name'] ?? 'User'; ?></span>
                                         </div>
                                     </div>
                                     <div class="dropdown-divider"></div>
@@ -183,20 +222,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                     <div class="alert alert-danger"><?= $error_message ?></div>
                 <?php endif; ?>
 
-                <form id="booking-form" method="post" action="payment.php" class="booking-form">
+                <form id="booking-form" method="post" action="" class="booking-form">
                     <div class="form-group">
                         <label for="nama_lengkap">Nama Lengkap</label>
-                        <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Masukkan nama lengkap Anda" required>
+                        <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Masukkan nama lengkap Anda" 
+                               value="<?= $user_data['full_name'] ?? '' ?>" required>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Alamat Email</label>
-                        <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required>
+                        <input type="email" id="email" name="email" placeholder="Masukkan email Anda" 
+                               value="<?= $user_data['email'] ?? '' ?>" required>
                     </div>
 
                     <div class="form-group">
                         <label for="telepon">Nomor Telepon</label>
-                        <input type="tel" id="telepon" name="telepon" placeholder="Masukkan nomor telepon Anda" required>
+                        <input type="tel" id="telepon" name="telepon" placeholder="Masukkan nomor telepon Anda" 
+                               value="<?= $user_data['phone'] ?? '' ?>" required>
                     </div>
 
                     <div class="form-row">
@@ -227,6 +269,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                         <textarea id="catatan" name="catatan" placeholder="Permintaan khusus atau kebutuhan lainnya?"></textarea>
                     </div>
 
+                    <!-- Hidden input fields -->
+                    <input type="hidden" name="guide_id" value="<?= $package['guide_id'] ?>">
+
                     <!-- FAQ Section -->
                     <div class="faq-section">
                         <h2>Pertanyaan yang Sering Diajukan</h2>
@@ -240,7 +285,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                                 <div class="accordion-content">
                                     <ul>
                                         <li>Transportasi pergi & pulang</li>
-                                        <li>Penginapan 1 malam (kamar twin sharing)</li>
+                                        <li>Penginapan <?= $package['duration_days'] ?> malam (kamar twin sharing)</li>
                                         <li>Makan 3x (1x breakfast, 1x lunch, 1x dinner)</li>
                                         <li>Pemandu wisata lokal</li>
                                         <li>Alat snorkeling lengkap</li>
@@ -278,6 +323,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                             </div>
                         </div>
                     </div>
+                    
+                    <button type="submit" name="submit_booking" class="btn-payment-mobile">
+                        Lanjutkan ke Pembayaran
+                    </button>
                 </form>
             </div>
 
@@ -368,6 +417,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                 dropdown.classList.toggle('active');
             });
         }
+        
+        // Handle logout
+        document.getElementById('logoutLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            fetch('logout.php')
+                .then(response => {
+                    window.location.href = 'login.html';
+                })
+                .catch(error => {
+                    console.error('Logout failed:', error);
+                });
+        });
     </script>
 </body>
 </html>

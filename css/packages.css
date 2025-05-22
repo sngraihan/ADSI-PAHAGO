@@ -92,7 +92,11 @@
     overflow: hidden;
     box-shadow: var(--shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Pastikan semua card punya tinggi yang sama dalam grid */
 }
+
 
 .package-card:hover {
     transform: translateY(-5px);
@@ -103,6 +107,7 @@
     height: 200px;
     position: relative;
     overflow: hidden;
+    flex-shrink: 0; /* Jangan biarkan gambar menyusut */
 }
 
 .package-image img {
@@ -137,6 +142,9 @@
 
 .package-content {
     padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Ini yang penting - mengisi ruang yang tersisa */
 }
 
 .package-content h3 {
@@ -188,12 +196,15 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    flex: 1; /* Biarkan deskripsi mengisi ruang yang tersisa */
 }
 
 .package-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: auto; /* Ini mendorong footer ke bawah */
+    padding-top: 1rem; /* Tambahan spacing dari konten di atas */
 }
 
 .price {
